@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ensureVoices, speak, stopSpeaking } from "@/lib/tts";
+import { ensureVoices, speak, speakWithAI, stopSpeaking } from "@/lib/tts";
 import type { Les } from "@/data/lessen";
 
 export default function StepLuisteren({
@@ -12,15 +12,20 @@ export default function StepLuisteren({
   onVerder: () => void;
 }) {
   const [speelt, setSpeelt] = useState(false);
+  const [aiStem, setAiStem] = useState<boolean | null>(null);
 
   useEffect(() => {
     ensureVoices();
     return () => stopSpeaking();
   }, []);
 
-  function speel(rate: number) {
+  async function speel(rate: number) {
     setSpeelt(true);
-    speak(les.tekst, rate, () => setSpeelt(false));
+    const ok = await speakWithAI(les.tekst, rate, () => setSpeelt(false));
+    setAiStem(ok);
+    if (!ok) {
+      speak(les.tekst, rate, () => setSpeelt(false));
+    }
   }
 
   return (
@@ -37,6 +42,11 @@ export default function StepLuisteren({
       </button>
       <p className="mt-3 font-semibold text-stone-700">
         {speelt ? "Speelt af…" : "Afspelen"}
+        {aiStem === true && (
+          <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
+            🤖 AI-stem
+          </span>
+        )}
       </p>
 
       <button

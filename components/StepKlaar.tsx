@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import type { OefenAntwoorden } from "@/components/StepOefenen";
 import type { Les } from "@/data/lessen";
 
@@ -19,6 +20,33 @@ export default function StepKlaar({
   antwoorden: OefenAntwoorden;
   verhaal: string;
 }) {
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedbackBezig, setFeedbackBezig] = useState(false);
+
+  useEffect(() => {
+    if (verhaal.trim() === "") return;
+    let cancelled = false;
+    setFeedbackBezig(true);
+    fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ verhaal, opdracht: les.opdracht }),
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("geen feedback"))))
+      .then((data: { feedback?: string }) => {
+        if (!cancelled) setFeedback(data.feedback ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setFeedback(null);
+      })
+      .finally(() => {
+        if (!cancelled) setFeedbackBezig(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [verhaal, les.opdracht]);
+
   const regels: Regel[] = [
     ...les.vervoeg.map((o, i) => ({
       label: `${o.voor}___${o.na} (${o.ww})`,
@@ -78,10 +106,26 @@ export default function StepKlaar({
         </div>
       )}
 
-      <div className="mt-4 rounded-3xl bg-green-50 p-5 text-center shadow-sm">
-        <p className="text-base font-semibold text-green-800">
-          🌟 Wat een mooi verhaaltje! Je leert heel snel Nederlands.
-        </p>
+      <div className="mt-4 rounded-3xl bg-green-50 p-5 shadow-sm">
+        <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-green-700">
+          🤖 Feedback op je verhaaltje
+        </h2>
+        {feedbackBezig && (
+          <div className="flex items-center gap-3">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-green-200 border-t-green-600" />
+            <p className="text-sm text-stone-500">De AI kijkt je verhaaltje na…</p>
+          </div>
+        )}
+        {!feedbackBezig && feedback && (
+          <p className="whitespace-pre-line text-base leading-relaxed text-green-900">
+            {feedback}
+          </p>
+        )}
+        {!feedbackBezig && !feedback && (
+          <p className="text-base font-semibold text-green-800">
+            🌟 Wat een mooi verhaaltje! Je leert heel snel Nederlands.
+          </p>
+        )}
       </div>
 
       <Link

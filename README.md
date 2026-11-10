@@ -35,6 +35,14 @@ Icons regenereren: `node scripts/make-icons.mjs`
 3. Op de iPhone: open de deployed site in Safari → Delen →
    "Voeg toe aan het Beginscherm".
 
+### AI-stem en AI-feedback (optioneel, fase 2)
+
+Zonder keys werkt de app met de ingebouwde telefoonstem en een compliment.
+Met keys krijg je een echte AI-stem en feedback op het verhaaltje. Zet in
+Vercel (Project → Settings → Environment Variables) de keys uit `.env.example`:
+`OPENAI_API_KEY` (stem, via platform.openai.com) en `MISTRAL_API_KEY`
+(feedback, via console.mistral.ai). Nooit keys in de code zetten.
+
 ## Volgende mijlpalen (M2–M4)
 
 - M2: automatische dagles via NOS/Jeugdjournaal-RSS + Mistral API-route

@@ -31,6 +31,7 @@ export default function StepLezen({
       "gi"
     );
     const result: Segment[] = [];
+    const alGezien = new Set<string>();
     let laatste = 0;
     let match: RegExpExecArray | null;
     while ((match = regex.exec(les.tekst)) !== null) {
@@ -40,11 +41,13 @@ export default function StepLezen({
       const gevonden = alleVormen.find(
         (f) => f.form.toLowerCase() === match![0].toLowerCase()
       );
-      result.push({
-        type: "woord",
-        value: match[0],
-        vocab: gevonden?.vocab ?? les.vocab[0],
-      });
+      const vocab = gevonden?.vocab ?? les.vocab[0];
+      if (alGezien.has(vocab.toon)) {
+        result.push({ type: "tekst", value: match[0] });
+      } else {
+        alGezien.add(vocab.toon);
+        result.push({ type: "woord", value: match[0], vocab });
+      }
       laatste = match.index + match[0].length;
     }
     if (laatste < les.tekst.length) {

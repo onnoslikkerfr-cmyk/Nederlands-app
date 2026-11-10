@@ -1,4 +1,5 @@
 let voicesReady = false;
+let currentAudio: HTMLAudioElement | null = null;
 
 function pickDutchVoice(): SpeechSynthesisVoice | undefined {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return undefined;
@@ -31,12 +32,51 @@ export function speak(text: string, rate: number, onEnd?: () => void): void {
   window.speechSynthesis.speak(utterance);
 }
 
+export async function speakWithAI(
+  text: string,
+  rate: number,
+  onEnd?: () => void
+): Promise<boolean> {
+  try {
+    const res = await fetch("/api/tts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, rate }),
+    });
+    if (!res.ok) return false;
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    currentAudio = audio;
+    audio.onended = () => {
+      URL.revokeObjectURL(url);
+      if (currentAudio === audio) currentAudio = null;
+      onEnd?.();
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      if (currentAudio === audio) currentAudio = null;
+      onEnd?.();
+    };
+    await audio.play();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function stopSpeaking(): void {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
+  if (typeof window === "undefined") return;
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
 }
 
 export function isSpeaking(): boolean {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
-  return window.speechSynthesis.speaking;
+  if (typeof window === "undefined") return false;
+  if (currentAudio && !currentAudio.paused) return true;
+  if ("speechSynthesis" in window) return window.speechSynthesis.speaking;
+  return false;
 }
