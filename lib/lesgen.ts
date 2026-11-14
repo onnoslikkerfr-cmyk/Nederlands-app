@@ -21,7 +21,8 @@ const SCHEMA = `{
 export function lesPrompt(artikel: NieuwsItem): string {
   return (
     "Je bent docent Nederlands voor volwassenen. Lees het meegeleverde nieuwsartikel en maak daar een complete les voor taalniveau A2 (CEFR). " +
-    "Herschrijf het artikel in je eigen woorden naar een tekst van 80-120 woorden met korte, simpele zinnen. " +
+    "BELANGRIJK: gebruik ALLEEN het meegeleverde artikel. Combineer het met geen enkel ander verhaal, verzin geen extra gebeurtenissen, en kies één duidelijk hoofdonderwerp. " +
+    "Herschrijf dat ene artikel in je eigen woorden naar een tekst van 80-120 woorden met korte, simpele zinnen. " +
     "Het artikel is licht en kindvriendelijk; sla desondanks misdaad, oorlog en rampen over. " +
     "Volg exact dit JSON-schema: " + SCHEMA + " " +
     "Regels: 6-8 vocab-woorden; woord_vorm komt letterlijk voor in de tekst; 2 vervoeg-oefeningen; 2 invul-oefeningen met 6 opties (1 goed, 5 plausibel maar fout); " +

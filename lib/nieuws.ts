@@ -29,6 +29,8 @@ function stripHtml(html: string): string {
 function isGeschikt(item: NieuwsItem): boolean {
   const check = (item.titel + " " + item.tekst).toLowerCase();
   if (item.tekst.length < 200) return false;
+  // één samenhangend verhaal: niet te veel losse onderwerpen in één artikel
+  if ((item.tekst.match(/\./g) || []).length > 14) return false;
   return !BLOKKEN.some((w) => check.includes(w));
 }
 
