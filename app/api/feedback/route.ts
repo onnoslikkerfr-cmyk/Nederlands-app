@@ -16,9 +16,9 @@ export async function POST(req: NextRequest) {
 
   const system =
     "Je bent een vriendelijke docent Nederlands voor een Franse leerlinge op niveau A2 (CEFR). " +
-    "Lees haar verhaaltje en geef feedback in heel simpel Nederlands (korte zinnen, niveau A2, geen Frans). " +
-    "Geef: (1) maximaal 2 spelfouten met de juiste spelling, (2) 1 compliment, (3) 1 tip om het volgende keer nog beter te doen. " +
-    'Antwoord alleen met geldige JSON: {"feedback": "..."}.';
+    "Lees haar verhaaltje. Geef feedback in heel simpel Nederlands (korte zinnen, niveau A2, geen Frans) als PLATTE TEKST — dus geen JSON, geen codes. " +
+    "Geef 3 korte stukjes: (1) spelfouten: noem ALLEEN echte spelfouten met de juiste spelling. Controleer extra goed en verbeter NOOIT een woord dat al correct is: 'cover' is goed Nederlands, en 'hij stelt' is correct ('stellen' is meervoud). Als er geen spelfouten zijn, schrijf: 'Geen spelfouten, knap!'. " +
+    "(2) één compliment; (3) één tip om het volgende keer nog beter te doen.";
 
   const upstream = await fetch("https://api.mistral.ai/v1/chat/completions", {
     method: "POST",
