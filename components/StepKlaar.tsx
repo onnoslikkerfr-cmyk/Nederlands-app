@@ -22,6 +22,7 @@ export default function StepKlaar({
 }) {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackBezig, setFeedbackBezig] = useState(false);
+  const [feedbackFout, setFeedbackFout] = useState<number | null>(null);
 
   useEffect(() => {
     if (verhaal.trim() === "") return;
@@ -32,7 +33,13 @@ export default function StepKlaar({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ verhaal, opdracht: les.opdracht }),
     })
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("geen feedback"))))
+      .then((res) => {
+        if (!res.ok) {
+          setFeedbackFout(res.status);
+          return Promise.reject(new Error("HTTP " + res.status));
+        }
+        return res.json();
+      })
       .then((data: { feedback?: string }) => {
         if (!cancelled) setFeedback(data.feedback ?? null);
       })
@@ -122,9 +129,17 @@ export default function StepKlaar({
           </p>
         )}
         {!feedbackBezig && !feedback && (
-          <p className="text-base font-semibold text-green-800">
-            🌟 Wat een mooi verhaaltje! Je leert heel snel Nederlands.
-          </p>
+          <>
+            <p className="text-base font-semibold text-green-800">
+              🌟 Wat een mooi verhaaltje! Je leert heel snel Nederlands.
+            </p>
+            {feedbackFout && (
+              <p className="mt-2 text-xs text-stone-400">
+                AI-feedback niet beschikbaar (HTTP {feedbackFout}) — controleer
+                MISTRAL_API_KEY in Vercel.
+              </p>
+            )}
+          </>
         )}
       </div>
 

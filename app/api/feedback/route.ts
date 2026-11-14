@@ -41,7 +41,11 @@ export async function POST(req: NextRequest) {
   });
 
   if (!upstream.ok) {
-    return new Response("Feedback-API gaf een fout", { status: upstream.status });
+    const body = await upstream.text().catch(() => "");
+    return Response.json(
+      { error: "Mistral gaf een fout", status: upstream.status, detail: body.slice(0, 300) },
+      { status: upstream.status }
+    );
   }
 
   const data = await upstream.json();
