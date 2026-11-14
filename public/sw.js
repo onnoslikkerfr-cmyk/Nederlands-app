@@ -1,4 +1,4 @@
-const CACHE = "dagelijks-nederlands-v1";
+const CACHE = "dagelijks-nederlands-v2";
 const OFFLINE_ASSETS = [
   "/",
   "/manifest.webmanifest",
@@ -33,6 +33,24 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  // Pagina's (navigaties): netwerk-eerst, cache alleen als back-up
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((c) => c || caches.match("/")))
+    );
+    return;
+  }
+
+  // Statische bestanden: cache-eerst
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
