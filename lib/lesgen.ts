@@ -68,7 +68,6 @@ export async function genereerLesMetMistral(artikel: NieuwsItem, id: string): Pr
     body: JSON.stringify({
       model: process.env.MISTRAL_MODEL || "mistral-small-latest",
       temperature: 0.3,
-      response_format: { type: "json_object" },
       messages: [
         { role: "system", content: "Je bent een ervaren docent Nederlands. Je antwoordt alleen met geldige JSON." },
         { role: "user", content: lesPrompt(artikel) },
@@ -78,8 +77,10 @@ export async function genereerLesMetMistral(artikel: NieuwsItem, id: string): Pr
   if (!res.ok) return null;
   const data = await res.json();
   const content = data?.choices?.[0]?.message?.content ?? "";
-  const jsonText = content.replace(/```json/gi, "").replace(/```/g, "").trim();
-  const parsed = JSON.parse(jsonText);
+  const jsonText = content.includes("{")
+    ? content.slice(content.indexOf("{"), content.lastIndexOf("}") + 1)
+    : content;
+  const parsed = JSON.parse(jsonText.replace(/```json/gi, "").replace(/```/g, ""));
   const les = valideerLes(parsed, id);
   if (les) {
     les.bron = `Naar het Jeugdjournaal-artikel “${artikel.titel}” (vereenvoudigd en herschreven op niveau A2). ${artikel.link}`;

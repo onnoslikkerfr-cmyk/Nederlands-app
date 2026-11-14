@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify({
       model: process.env.MISTRAL_MODEL || "mistral-small-latest",
       temperature: 0.4,
-      response_format: { type: "json_object" },
       messages: [
         { role: "system", content: system },
         {
@@ -52,7 +51,10 @@ export async function POST(req: NextRequest) {
   const content = data?.choices?.[0]?.message?.content ?? "{}";
   let feedback = "Goed gedaan!";
   try {
-    feedback = JSON.parse(content).feedback ?? feedback;
+    const jsonText = content.includes("{")
+      ? content.slice(content.indexOf("{"), content.lastIndexOf("}") + 1)
+      : content;
+    feedback = JSON.parse(jsonText.replace(/```json/gi, "").replace(/```/g, "")).feedback ?? feedback;
   } catch {
     feedback = content;
   }
