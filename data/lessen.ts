@@ -33,6 +33,7 @@ export type Les = {
   invullen: InvulOefening[];
   opdracht: string;
 };
+// Opmerking: het verhaaltje bestaat uit 3 zinnen (was 4); kies steeds één leswoord.
 
 export const lessen: Les[] = [
   {
@@ -121,7 +122,7 @@ export const lessen: Les[] = [
       },
     ],
     opdracht:
-      "Schrijf een kort verhaaltje van vier zinnen over een ding dat je hebt gevonden. Wat was het? Waar vond je het? Wat ga je ermee doen?",
+      "Schrijf zelf drie zinnen over een ding dat je hebt gevonden. Kies één woord uit de woordenlijst en gebruik het.",
   },
   {
     id: "2",
@@ -209,7 +210,7 @@ export const lessen: Les[] = [
       },
     ],
     opdracht:
-      "Schrijf een kort verhaaltje van vier zinnen over jouw favoriete plek om boodschappen te doen. Wat koop je daar? Met wie ga je? Wat vind je er leuk aan?",
+      "Schrijf zelf drie zinnen over boodschappen doen. Kies één woord uit de woordenlijst en gebruik het.",
   },
   {
     id: "3",
@@ -297,7 +298,7 @@ export const lessen: Les[] = [
       },
     ],
     opdracht:
-      "Schrijf een kort verhaaltje van vier zinnen over iemand in jouw buurt of bij jou thuis. Wie is het? Wat doen jullie samen?",
+      "Schrijf zelf drie zinnen over iemand in jouw buurt. Kies één woord uit de woordenlijst en gebruik het.",
   },
 ];
 

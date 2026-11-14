@@ -49,10 +49,10 @@ export default function StepVerhaaltje({
       <p
         className={
           "mt-3 text-sm font-bold " +
-          (zinnen >= 4 ? "text-green-600" : "text-stone-500")
+          (zinnen >= 3 ? "text-green-600" : "text-stone-500")
         }
       >
-        {Math.min(zinnen, 4)} / 4 zinnen {zinnen >= 4 ? "✓" : ""}
+        {Math.min(zinnen, 3)} / 3 zinnen {zinnen >= 3 ? "✓" : ""}
       </p>
 
       <button

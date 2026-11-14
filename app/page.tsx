@@ -1,18 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { lessen } from "@/data/lessen";
-import { firstUnfinishedLessonId } from "@/lib/storage";
 
 const NIVEAUS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 export default function Home() {
-  const [leerpadId, setLeerpadId] = useState(lessen[0].id);
-
-  useEffect(() => {
-    setLeerpadId(firstUnfinishedLessonId(lessen.map((l) => l.id)));
-  }, []);
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-[480px] px-5 pt-10 pb-12">
@@ -42,7 +34,7 @@ export default function Home() {
 
       <div className="mt-6 space-y-4">
         <Link
-          href={`/les/${leerpadId}`}
+          href="/les/vandaag"
           className="block rounded-3xl border border-amber-200 bg-white p-5 shadow-md transition active:scale-[0.98]"
         >
           <div className="text-4xl">📖</div>
