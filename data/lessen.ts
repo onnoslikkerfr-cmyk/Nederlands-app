@@ -31,9 +31,10 @@ export type Les = {
   vocab: Vocab[];
   vervoeg: Vervoeuging[];
   invullen: InvulOefening[];
+  schrijfwoorden: string[];
   opdracht: string;
 };
-// Opmerking: het verhaaltje bestaat uit 3 zinnen (was 4); kies steeds één leswoord.
+// Schrijven: 3 zinnen, één per schrijfwoord.
 
 export const lessen: Les[] = [
   {
@@ -121,8 +122,9 @@ export const lessen: Les[] = [
         goed: "fornuis",
       },
     ],
+    schrijfwoorden: ["parel", "zeldzaam", "fornuis"],
     opdracht:
-      "Schrijf zelf drie zinnen over een ding dat je hebt gevonden. Kies één woord uit de woordenlijst en gebruik het.",
+      "Schrijf drie zinnen: maak voor elk woord hieronder één zin.",
   },
   {
     id: "2",
@@ -209,8 +211,9 @@ export const lessen: Les[] = [
         goed: "kosten",
       },
     ],
+    schrijfwoorden: ["markt", "vers", "milieu"],
     opdracht:
-      "Schrijf zelf drie zinnen over boodschappen doen. Kies één woord uit de woordenlijst en gebruik het.",
+      "Schrijf drie zinnen: maak voor elk woord hieronder één zin.",
   },
   {
     id: "3",
@@ -297,8 +300,9 @@ export const lessen: Les[] = [
         goed: "gezellig",
       },
     ],
+    schrijfwoorden: ["buurvrouw", "gezellig", "taart"],
     opdracht:
-      "Schrijf zelf drie zinnen over iemand in jouw buurt. Kies één woord uit de woordenlijst en gebruik het.",
+      "Schrijf drie zinnen: maak voor elk woord hieronder één zin.",
   },
 ];
 

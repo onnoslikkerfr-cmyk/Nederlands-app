@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Les } from "@/data/lessen";
 
 export type OefenAntwoorden = {
@@ -21,6 +21,20 @@ export default function StepOefenen({
 }) {
   const [vervoeg, setVervoeg] = useState<string[]>(les.vervoeg.map(() => ""));
   const [invullen, setInvullen] = useState<string[]>(les.invullen.map(() => ""));
+
+  // Opties shufflen zodat het goede antwoord niet altijd het eerste blokje is
+  const geschuddeOpties = useMemo(
+    () =>
+      les.invullen.map((o) => {
+        const arr = [...o.opties];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }),
+    [les]
+  );
 
   const allesIngevuld =
     vervoeg.every((a) => a.trim() !== "") &&
@@ -88,7 +102,7 @@ export default function StepOefenen({
               {o.na}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              {o.opties.map((optie) => {
+              {geschuddeOpties[i].map((optie) => {
                 const gekozen = invullen[i] === optie;
                 return (
                   <button

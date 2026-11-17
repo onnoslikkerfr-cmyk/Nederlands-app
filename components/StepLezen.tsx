@@ -27,7 +27,7 @@ export default function StepLezen({
     );
     alleVormen.sort((a, b) => b.form.length - a.form.length);
     const regex = new RegExp(
-      alleVormen.map((f) => escapeRegex(f.form)).join("|"),
+      "\\b(?:" + alleVormen.map((f) => escapeRegex(f.form)).join("|") + ")\\b",
       "gi"
     );
     const result: Segment[] = [];

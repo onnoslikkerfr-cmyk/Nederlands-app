@@ -20,9 +20,6 @@ export default function Home() {
       <h2 className="mt-8 text-3xl font-extrabold text-stone-900">
         Wat wil je leren vandaag?
       </h2>
-      <p className="mt-1 text-lg italic text-stone-500">
-        Qu&apos;est-ce que tu veux apprendre aujourd&apos;hui&nbsp;?
-      </p>
 
       <p className="mt-4 rounded-2xl bg-white/70 p-4 text-sm leading-relaxed text-stone-600 shadow-sm">
         Elke dag een les van ongeveer 5 minuten, in vaste volgorde:{" "}

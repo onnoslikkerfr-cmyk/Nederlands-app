@@ -1,4 +1,4 @@
-const STAPPEN = ["Luisteren", "Lezen", "Oefenen", "Verhaaltje", "Klaar"];
+const STAPPEN = ["Luisteren", "Lezen", "Oefenen", "Schrijven", "Klaar"];
 const ICONS = ["🔊", "📖", "✏️", "✍️", "🎉"];
 
 export default function StepsBar({

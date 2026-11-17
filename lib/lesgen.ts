@@ -15,7 +15,8 @@ const SCHEMA = `{
   ],
   "vervoeg": [ { "voor": "De kok ", "na": " de oester open.", "ww": "maken", "goed": ["maakt"] } ],
   "invullen": [ { "voor": "Dat kan jaren ", "na": ".", "opties": ["duren","kosten","slapen","vallen","lopen","praten"], "goed": "duren" } ],
-  "opdracht": "Schrijf zelf drie zinnen. Kies één woord uit de leswoorden en gebruik het."
+  "schrijfwoorden": ["woord1", "woord2", "woord3"],
+  "opdracht": "Schrijf drie zinnen: maak voor elk woord hieronder één zin."
 }`;
 
 export function lesPrompt(artikel: NieuwsItem): string {
@@ -26,7 +27,8 @@ export function lesPrompt(artikel: NieuwsItem): string {
     "Het artikel is licht en kindvriendelijk; sla desondanks misdaad, oorlog en rampen over. " +
     "Volg exact dit JSON-schema: " + SCHEMA + " " +
     "Regels: 6-8 vocab-woorden; woord_vorm komt letterlijk voor in de tekst; 2 vervoeg-oefeningen; 2 invul-oefeningen met 6 opties (1 goed, 5 plausibel maar fout); " +
-    "definities in heel simpel Nederlands, zonder Frans; voorbeeldzinnen over het dagelijks leven; de opdracht is: schrijf zelf drie zinnen en kies één leswoord. " +
+    "schrijfwoorden: precies 3 belangrijke woorden die letterlijk in de tekst voorkomen; de opdracht is: schrijf drie zinnen, één zin per schrijfwoord; " +
+    "definities in heel simpel Nederlands, zonder Frans; voorbeeldzinnen over het dagelijks leven. " +
     "Antwoord alleen met geldige JSON.\n\nARTIKEL TITEL: " + artikel.titel + "\nARTIKEL TEKST: " + artikel.tekst.slice(0, 4000)
   );
 }
@@ -49,6 +51,8 @@ export function valideerLes(data: unknown, id: string): Les | null {
     for (const i of l.invullen) {
       if (!Array.isArray(i.opties) || i.opties.length !== 6 || !i.goed) return null;
     }
+    if (!Array.isArray(l.schrijfwoorden) || l.schrijfwoorden.length !== 3) return null;
+    if (!l.schrijfwoorden.every((w) => typeof w === "string" && tekstLaag.includes(w.toLowerCase()))) return null;
     if (typeof l.opdracht !== "string" || !l.opdracht) return null;
     return { ...l, id, type: "nieuws", niveau: "A2", emoji: l.emoji || "📰" };
   } catch {
