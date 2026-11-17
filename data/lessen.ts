@@ -5,6 +5,7 @@ export type Vocab = {
   betekenis: string;
   voorbeeld: string;
   synoniem?: string;
+  voorbeelden?: string[];
 };
 
 export type Vervoeuging = {
@@ -29,6 +30,7 @@ export type Les = {
   titel: string;
   emoji: string;
   bron: string;
+  bron_link?: string;
   tekst: string;
   vocab: Vocab[];
   vervoeg: Vervoeuging[];

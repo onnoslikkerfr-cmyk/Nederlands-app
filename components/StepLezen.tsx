@@ -90,6 +90,16 @@ export default function StepLezen({
         Woorden bekeken: {bekeken.size} van {les.vocab.length}
       </p>
       <p className="mt-2 text-xs italic text-stone-400">{les.bron}</p>
+      {les.bron_link && (
+        <a
+          href={les.bron_link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1 inline-block text-xs font-semibold text-amber-700 underline underline-offset-2"
+        >
+          🔗 Bekijk het originele artikel
+        </a>
+      )}
 
       <button
         onClick={onVerder}
@@ -110,12 +120,22 @@ export default function StepLezen({
           >
             <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-stone-200" />
             <h2 className="text-2xl font-extrabold text-amber-600">{actief.toon}</h2>
+            {actief.synoniem && (
+              <p className="mt-1 text-sm font-bold text-stone-500">
+                Synoniem: <span className="text-amber-700">{actief.synoniem}</span>
+              </p>
+            )}
             <p className="mt-3 text-base leading-relaxed text-stone-700">
               {actief.betekenis}
             </p>
-            <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm italic text-stone-600">
-              “{actief.voorbeeld}”
-            </p>
+            {[actief.voorbeeld, ...(actief.voorbeelden ?? [])].map((vb, i) => (
+              <p
+                key={i}
+                className="mt-2 rounded-xl bg-amber-50 p-3 text-sm italic text-stone-600"
+              >
+                “{vb}”
+              </p>
+            ))}
             <button
               onClick={() => setActief(null)}
               className="mt-5 w-full rounded-full bg-amber-500 py-3.5 text-lg font-bold text-white shadow transition active:scale-[0.98]"

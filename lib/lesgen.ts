@@ -8,10 +8,11 @@ const SCHEMA = `{
   "titel": "Titel van de les",
   "emoji": "🦪",
   "bron": "Naar het Jeugdjournaal-artikel ... (vereenvoudigd en herschreven op niveau A2)",
+  "bron_link": "https://jeugdjournaal.nl/l/...",
   "tekst": "De volledige leestekst (A2, 80-120 woorden, korte zinnen).",
   "vocab": [
     { "woord_vorm": "zeldzaam", "toon": "zeldzaam", "match_forms": ["zeldzaam", "zeldzame"],
-      "betekenis": "Zeldzaam betekent: het gebeurt bijna nooit.", "voorbeeld": "Een witte raaf is heel zeldzaam.", "synoniem": "bijzonder" }
+      "betekenis": "Zeldzaam betekent: het gebeurt bijna nooit.", "voorbeeld": "Een witte raaf is heel zeldzaam.", "synoniem": "bijzonder", "voorbeelden": ["Het is zeldzaam om een vierbladige klaver te vinden."] }
   ],
   "vervoeg": [ { "voor": "De kok ", "na": " de oester open.", "ww": "maken", "goed": ["maakt"], "hulp": { "type": "regelmatig werkwoord", "vormen": "ik maak · jij maakt · hij/zij/het maakt · wij maken · jullie maken · zij maken" } } ],
   "invullen": [ { "voor": "Dat kan jaren ", "na": ".", "opties": ["duren","kosten","slapen","vallen","lopen","praten"], "goed": "duren" } ],
@@ -28,7 +29,7 @@ export function lesPrompt(artikel: NieuwsItem): string {
     "Volg exact dit JSON-schema: " + SCHEMA + " " +
     "Regels: 6-8 vocab-woorden met synoniem (indien beschikbaar); woord_vorm komt letterlijk voor in de tekst; 2 vervoeg-oefeningen elk met 'hulp' (type regelmatig/onregelmatig + volledige vervoeging); 2 invul-oefeningen met 6 opties (1 goed, 5 plausibel maar fout); " +
     "schrijfwoorden: precies 3 belangrijke woorden die letterlijk in de tekst voorkomen; de opdracht is: schrijf drie zinnen, één zin per schrijfwoord; " +
-    "definities in heel simpel Nederlands, zonder Frans; voorbeeldzinnen over het dagelijks leven. " +
+    "definities in héél simpel Nederlands, zonder Frans, alsof je tegen een 8-jarige praat; geef per woord een synoniem en 2-3 korte voorbeeldzinnen over het dagelijks leven (in 'voorbeelden'). " +
     "Antwoord alleen met geldige JSON.\n\nARTIKEL TITEL: " + artikel.titel + "\nARTIKEL TEKST: " + artikel.tekst.slice(0, 4000)
   );
 }
@@ -87,7 +88,8 @@ export async function genereerLesMetMistral(artikel: NieuwsItem, id: string): Pr
   const parsed = JSON.parse(jsonText.replace(/```json/gi, "").replace(/```/g, ""));
   const les = valideerLes(parsed, id);
   if (les) {
-    les.bron = `Naar het Jeugdjournaal-artikel “${artikel.titel}” (vereenvoudigd en herschreven op niveau A2). ${artikel.link}`;
+    les.bron = `Naar het Jeugdjournaal-artikel “${artikel.titel}” (vereenvoudigd en herschreven op niveau A2).`;
+    les.bron_link = artikel.link;
   }
   return les;
 }
