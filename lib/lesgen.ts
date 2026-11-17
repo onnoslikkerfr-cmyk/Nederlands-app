@@ -11,9 +11,9 @@ const SCHEMA = `{
   "tekst": "De volledige leestekst (A2, 80-120 woorden, korte zinnen).",
   "vocab": [
     { "woord_vorm": "zeldzaam", "toon": "zeldzaam", "match_forms": ["zeldzaam", "zeldzame"],
-      "betekenis": "Zeldzaam betekent: het gebeurt bijna nooit.", "voorbeeld": "Een witte raaf is heel zeldzaam." }
+      "betekenis": "Zeldzaam betekent: het gebeurt bijna nooit.", "voorbeeld": "Een witte raaf is heel zeldzaam.", "synoniem": "bijzonder" }
   ],
-  "vervoeg": [ { "voor": "De kok ", "na": " de oester open.", "ww": "maken", "goed": ["maakt"] } ],
+  "vervoeg": [ { "voor": "De kok ", "na": " de oester open.", "ww": "maken", "goed": ["maakt"], "hulp": { "type": "regelmatig werkwoord", "vormen": "ik maak · jij maakt · hij/zij/het maakt · wij maken · jullie maken · zij maken" } } ],
   "invullen": [ { "voor": "Dat kan jaren ", "na": ".", "opties": ["duren","kosten","slapen","vallen","lopen","praten"], "goed": "duren" } ],
   "schrijfwoorden": ["woord1", "woord2", "woord3"],
   "opdracht": "Schrijf drie zinnen: maak voor elk woord hieronder één zin."
@@ -26,7 +26,7 @@ export function lesPrompt(artikel: NieuwsItem): string {
     "Herschrijf dat ene artikel in je eigen woorden naar een tekst van 80-120 woorden met korte, simpele zinnen. " +
     "Het artikel is licht en kindvriendelijk; sla desondanks misdaad, oorlog en rampen over. " +
     "Volg exact dit JSON-schema: " + SCHEMA + " " +
-    "Regels: 6-8 vocab-woorden; woord_vorm komt letterlijk voor in de tekst; 2 vervoeg-oefeningen; 2 invul-oefeningen met 6 opties (1 goed, 5 plausibel maar fout); " +
+    "Regels: 6-8 vocab-woorden met synoniem (indien beschikbaar); woord_vorm komt letterlijk voor in de tekst; 2 vervoeg-oefeningen elk met 'hulp' (type regelmatig/onregelmatig + volledige vervoeging); 2 invul-oefeningen met 6 opties (1 goed, 5 plausibel maar fout); " +
     "schrijfwoorden: precies 3 belangrijke woorden die letterlijk in de tekst voorkomen; de opdracht is: schrijf drie zinnen, één zin per schrijfwoord; " +
     "definities in heel simpel Nederlands, zonder Frans; voorbeeldzinnen over het dagelijks leven. " +
     "Antwoord alleen met geldige JSON.\n\nARTIKEL TITEL: " + artikel.titel + "\nARTIKEL TEKST: " + artikel.tekst.slice(0, 4000)

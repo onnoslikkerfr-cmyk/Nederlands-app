@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import HelpSheet from "@/components/HelpSheet";
 import type { Les } from "@/data/lessen";
 
 export type OefenAntwoorden = {
@@ -36,6 +37,8 @@ export default function StepOefenen({
     [les]
   );
 
+  const [hulpIndex, setHulpIndex] = useState<number | null>(null);
+
   const allesIngevuld =
     vervoeg.every((a) => a.trim() !== "") &&
     invullen.every((a) => a.trim() !== "");
@@ -66,7 +69,19 @@ export default function StepOefenen({
                 : "border-amber-300 bg-white focus:border-amber-500")
           }
         />
-        {o.na} <span className="text-sm text-stone-400">({o.ww})</span>
+        {o.na}{" "}
+        <span className="text-sm text-stone-400">
+          ({o.ww})
+        </span>
+        {o.hulp && (
+          <button
+            onClick={() => setHulpIndex(index)}
+            aria-label={`Hulp bij ${o.ww}`}
+            className="ml-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700 transition active:scale-90"
+          >
+            ?
+          </button>
+        )}
       </p>
     );
   }
@@ -135,6 +150,20 @@ export default function StepOefenen({
       >
         Verder →
       </button>
+
+      {hulpIndex !== null && les.vervoeg[hulpIndex]?.hulp && (
+        <HelpSheet
+          titel={les.vervoeg[hulpIndex].ww}
+          onClose={() => setHulpIndex(null)}
+        >
+          <p className="text-sm font-bold uppercase tracking-wide text-stone-400">
+            {les.vervoeg[hulpIndex].hulp!.type}
+          </p>
+          <p className="mt-2 text-base leading-relaxed text-stone-800">
+            {les.vervoeg[hulpIndex].hulp!.vormen}
+          </p>
+        </HelpSheet>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ export type Vocab = {
   match_forms: string[];
   betekenis: string;
   voorbeeld: string;
+  synoniem?: string;
 };
 
 export type Vervoeuging = {
@@ -11,6 +12,7 @@ export type Vervoeuging = {
   na: string;
   ww: string;
   goed: string[];
+  hulp?: { type: string; vormen: string };
 };
 
 export type InvulOefening = {
@@ -53,6 +55,7 @@ export const lessen: Les[] = [
         match_forms: ["zeldzaam", "zeldzame"],
         betekenis: "Zeldzaam betekent: het gebeurt bijna nooit.",
         voorbeeld: "Een witte raaf is heel zeldzaam.",
+        synoniem: "bijzonder",
       },
       {
         woord_vorm: "parel",
@@ -60,6 +63,7 @@ export const lessen: Les[] = [
         match_forms: ["parel", "parels"],
         betekenis: "Een parel is een mooi, rond ding dat in een oester groeit.",
         voorbeeld: "Ze draagt een ketting met parels.",
+        synoniem: "juweel",
       },
       {
         woord_vorm: "oester",
@@ -102,11 +106,12 @@ export const lessen: Les[] = [
         match_forms: ["fornuis"],
         betekenis: "Het fornuis staat in de keuken. Daarop kook je.",
         voorbeeld: "Op het fornuis staat een pan met soep.",
+        synoniem: "kookstel",
       },
     ],
     vervoeg: [
-      { voor: "De kok ", na: " de oester open.", ww: "maken", goed: ["maakt"] },
-      { voor: "Een parel ", na: " in de oester.", ww: "groeien", goed: ["groeit"] },
+      { voor: "De kok ", na: " de oester open.", ww: "maken", goed: ["maakt"], hulp: { type: "regelmatig werkwoord", vormen: "ik maak · jij maakt · hij/zij/het maakt · wij maken · jullie maken · zij maken" } },
+      { voor: "Een parel ", na: " in de oester.", ww: "groeien", goed: ["groeit"], hulp: { type: "regelmatig werkwoord", vormen: "ik groei · jij groeit · hij/zij/het groeit · wij groeien · jullie groeien · zij groeien" } },
     ],
     invullen: [
       {
@@ -142,6 +147,7 @@ export const lessen: Les[] = [
         match_forms: ["markt"],
         betekenis: "Op de markt koop je verse producten van boeren.",
         voorbeeld: "De markt is elke week op het plein.",
+        synoniem: "inkoop",
       },
       {
         woord_vorm: "plein",
@@ -156,6 +162,7 @@ export const lessen: Les[] = [
         match_forms: ["vers", "verse"],
         betekenis: "Vers betekent: net gemaakt of net geplukt, niet oud.",
         voorbeeld: "Ik koop het liefst vers brood.",
+        synoniem: "fris",
       },
       {
         woord_vorm: "boer",
@@ -191,11 +198,12 @@ export const lessen: Les[] = [
         match_forms: ["milieu"],
         betekenis: "Het milieu is de natuur om ons heen: lucht, water en aarde.",
         voorbeeld: "Fietsen is goed voor het milieu.",
+        synoniem: "natuur",
       },
     ],
     vervoeg: [
-      { voor: "Sanne ", na: " naar de markt.", ww: "gaan", goed: ["gaat"] },
-      { voor: "De markt ", na: " om acht uur.", ww: "beginnen", goed: ["begint"] },
+      { voor: "Sanne ", na: " naar de markt.", ww: "gaan", goed: ["gaat"], hulp: { type: "onregelmatig werkwoord", vormen: "ik ga · jij gaat · hij/zij/het gaat · wij gaan · jullie gaan · zij gaan" } },
+      { voor: "De markt ", na: " om acht uur.", ww: "beginnen", goed: ["begint"], hulp: { type: "regelmatig werkwoord", vormen: "ik begin · jij begint · hij/zij/het begint · wij beginnen · jullie beginnen · zij beginnen" } },
     ],
     invullen: [
       {
@@ -231,6 +239,7 @@ export const lessen: Les[] = [
         match_forms: ["buurvrouw"],
         betekenis: "De buurvrouw is de vrouw die naast je woont.",
         voorbeeld: "Mijn buurvrouw leent me soms suiker.",
+        synoniem: "buur",
       },
       {
         woord_vorm: "appartement",
@@ -266,6 +275,7 @@ export const lessen: Les[] = [
         match_forms: ["taart"],
         betekenis: "Een taart is een zoete cake, vaak voor een verjaardag.",
         voorbeeld: "Op mijn verjaardag eet ik chocoladetaart.",
+        synoniem: "cake",
       },
       {
         woord_vorm: "gezellig",
@@ -273,6 +283,7 @@ export const lessen: Les[] = [
         match_forms: ["gezellig"],
         betekenis: "Gezellig betekent: fijn en prettig samen met andere mensen.",
         voorbeeld: "We hadden een gezellige avond met vrienden.",
+        synoniem: "prettig",
       },
       {
         woord_vorm: "geluk",
@@ -283,8 +294,8 @@ export const lessen: Les[] = [
       },
     ],
     vervoeg: [
-      { voor: "Peter ", na: " koffie bij Wies.", ww: "drinken", goed: ["drinkt"] },
-      { voor: "Ze ", na: " al dertig jaar in de straat.", ww: "wonen", goed: ["woont"] },
+      { voor: "Peter ", na: " koffie bij Wies.", ww: "drinken", goed: ["drinkt"], hulp: { type: "onregelmatig (sterk) werkwoord", vormen: "ik drink · jij drinkt · hij/zij/het drinkt · wij drinken · jullie drinken · zij drinken" } },
+      { voor: "Ze ", na: " al dertig jaar in de straat.", ww: "wonen", goed: ["woont"], hulp: { type: "regelmatig werkwoord", vormen: "ik woon · jij woont · hij/zij/het woont · wij wonen · jullie wonen · zij wonen" } },
     ],
     invullen: [
       {
