@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LES_KEY } from "@/app/les/onderwerp/page";
+import type { Les } from "@/data/lessen";
 
 const SUGGESTIES = [
   "een afspraak maken bij de dokter",
@@ -11,16 +14,41 @@ const SUGGESTIES = [
   "iets bestellen in een restaurant",
 ];
 
-type Fase = "invoer" | "genereren" | "resultaat";
+type Fase = "invoer" | "genereren" | "fout";
 
 export default function OnderwerpPage() {
+  const router = useRouter();
   const [invoer, setInvoer] = useState("");
   const [fase, setFase] = useState<Fase>("invoer");
+  const [foutmelding, setFoutmelding] = useState("");
 
-  function maakLes() {
+  async function maakLes() {
     if (!invoer.trim()) return;
     setFase("genereren");
-    window.setTimeout(() => setFase("resultaat"), 1800);
+    setFoutmelding("");
+    try {
+      const res = await fetch("/api/les-onderwerp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ onderwerp: invoer.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setFoutmelding(
+          res.status === 501
+            ? "De AI is nog niet gekoppeld (MISTRAL_API_KEY ontbreekt in Vercel)."
+            : data.error ?? "Er ging iets mis. Probeer het opnieuw."
+        );
+        setFase("fout");
+        return;
+      }
+      const les = data.les as Les;
+      window.localStorage.setItem(LES_KEY, JSON.stringify(les));
+      router.push("/les/onderwerp");
+    } catch {
+      setFoutmelding("Geen verbinding. Probeer het opnieuw.");
+      setFase("fout");
+    }
   }
 
   return (
@@ -29,7 +57,7 @@ export default function OnderwerpPage() {
         ← Terug
       </Link>
 
-      {fase === "invoer" && (
+      {fase !== "genereren" && (
         <>
           <h1 className="mt-6 text-3xl font-extrabold text-stone-900">
             Kies zelf een onderwerp
@@ -73,27 +101,21 @@ export default function OnderwerpPage() {
         <div className="mt-24 flex flex-col items-center text-center">
           <div className="h-14 w-14 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
           <p className="mt-6 text-lg font-semibold text-stone-700">
-            Je les wordt gemaakt…
+            De AI maakt je les over “{invoer.trim()}”…
           </p>
         </div>
       )}
 
-      {fase === "resultaat" && (
+      {fase === "fout" && (
         <div className="mt-16 rounded-3xl border border-amber-200 bg-white p-6 text-center shadow-md">
-          <div className="text-5xl">🚧</div>
-          <h1 className="mt-4 text-2xl font-extrabold text-stone-900">
-            Bijna klaar!
-          </h1>
-          <p className="mt-3 leading-relaxed text-stone-600">
-            In versie 2 van de app kun je hier zelf een onderwerp kiezen en
-            maakt de AI een les voor jou. Nu volg je eerst het leerpad.
-          </p>
-          <Link
-            href="/"
-            className="mt-6 block w-full rounded-full bg-amber-500 py-3.5 text-lg font-bold text-white shadow-lg transition active:scale-[0.98]"
+          <div className="text-5xl">😕</div>
+          <p className="mt-4 leading-relaxed text-stone-600">{foutmelding}</p>
+          <button
+            onClick={() => setFase("invoer")}
+            className="mt-6 w-full rounded-full bg-amber-500 py-3.5 text-lg font-bold text-white shadow-lg transition active:scale-[0.98]"
           >
-            Naar het leerpad
-          </Link>
+            Probeer opnieuw
+          </button>
         </div>
       )}
     </main>

@@ -93,3 +93,52 @@ export async function genereerLesMetMistral(artikel: NieuwsItem, id: string): Pr
   }
   return les;
 }
+
+export function onderwerpPrompt(onderwerp: string): string {
+  return (
+    "Je bent docent Nederlands voor volwassenen. Schrijf een les over de volgende situatie die de leerling wil oefenen: " +
+    onderwerp + ". " +
+    "Verzin een realistisch verhaaltje van 80-120 woorden over deze situatie op taalniveau A2 (CEFR), met korte, simpele zinnen. " +
+    "Volg exact dit JSON-schema: " + SCHEMA + " " +
+    "Regels: 6-8 vocab-woorden met synoniem; woord_vorm komt letterlijk voor in de tekst; 2 vervoeg-oefeningen elk met 'hulp'; 2 invul-oefeningen met 6 opties (1 goed, 5 plausibel maar fout); " +
+    "schrijfwoorden: precies 3 woorden uit de tekst; definities in héél simpel Nederlands (alsof je tegen een 8-jarige praat); 2-3 voorbeeldzinnen per woord. " +
+    '"bron" is: "Les gegenereerd door AI". Antwoord alleen met geldige JSON.'
+  );
+}
+
+export async function genereerOnderwerpLes(
+  onderwerp: string,
+  id: string
+): Promise<Les | null> {
+  const apiKey = process.env.MISTRAL_API_KEY;
+  if (!apiKey) return null;
+  const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: process.env.MISTRAL_MODEL || "mistral-small-latest",
+      temperature: 0.4,
+      messages: [
+        { role: "system", content: "Je bent een ervaren docent Nederlands. Je antwoordt alleen met geldige JSON." },
+        { role: "user", content: onderwerpPrompt(onderwerp) },
+      ],
+    }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  const content = data?.choices?.[0]?.message?.content ?? "";
+  const jsonText = content.includes("{")
+    ? content.slice(content.indexOf("{"), content.lastIndexOf("}") + 1)
+    : content;
+  const parsed = JSON.parse(jsonText.replace(/```json/gi, "").replace(/```/g, ""));
+  const les = valideerLes(parsed, id);
+  if (les) {
+    les.type = "onderwerp";
+    les.bron = "Les gegenereerd door AI.";
+    les.bron_link = undefined;
+  }
+  return les;
+}
